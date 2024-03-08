@@ -63,7 +63,6 @@ class Record:
     def __str__(self):
             return f"{self.name.value} : {'; '.join(p.value for p in self.phones)}"
         
-
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -79,8 +78,7 @@ class AddressBook(UserDict):
             self.data.pop(name)
         else:
             raise KeyError("The specified name doesn't exist.")
-    
-    
+        
     def get_birthdays_per_week(self):
         today = datetime.today().date() 
         end_of_week = today + timedelta(days=6)    
@@ -94,35 +92,36 @@ class AddressBook(UserDict):
             }
 
         for user in self.data.values():
-            user_birthday = datetime.strptime(user.birthday.value, "%d.%m.%Y").date()
-            birthday_this_year = user_birthday.replace(year=today.year)    
+            if user.birthday is not None:
+                user_birthday = datetime.strptime(user.birthday.value, "%d.%m.%Y").date()
+                birthday_this_year = user_birthday.replace(year=today.year)    
 
-            if today <= birthday_this_year <= end_of_week and not today.weekday() == 6 and not today.weekday() == 0:
-                if birthday_this_year.weekday() == 1:
-                    birthdays['Tuesday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 2:
-                    birthdays['Wednesday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 3:
-                    birthdays['Thursday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 4:
-                    birthdays['Friday'].append(user.name.value)
-                else:
-                    birthdays['Monday'].append(user.name.value)
-            elif today <= birthday_this_year <= end_of_week and today.weekday() == 6 or today.weekday() == 0:
-                if birthday_this_year.weekday() == 1:
-                    birthdays['Tuesday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 2:
-                    birthdays['Wednesday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 3:
-                    birthdays['Thursday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 4:
-                    birthdays['Friday'].append(user.name.value)
-                elif birthday_this_year.weekday() == 5:
-                    continue
-                elif birthday_this_year.weekday() == 6:
-                    continue
-                else:
-                    birthdays['Monday'].append(user.name.value)
+                if today <= birthday_this_year <= end_of_week and not today.weekday() == 6 and not today.weekday() == 0:
+                    if birthday_this_year.weekday() == 1:
+                        birthdays['Tuesday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 2:
+                        birthdays['Wednesday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 3:
+                        birthdays['Thursday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 4:
+                        birthdays['Friday'].append(user.name.value)
+                    else:
+                        birthdays['Monday'].append(user.name.value)
+                elif today <= birthday_this_year <= end_of_week and today.weekday() == 6 or today.weekday() == 0:
+                    if birthday_this_year.weekday() == 1:
+                        birthdays['Tuesday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 2:
+                        birthdays['Wednesday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 3:
+                        birthdays['Thursday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 4:
+                        birthdays['Friday'].append(user.name.value)
+                    elif birthday_this_year.weekday() == 5:
+                        continue
+                    elif birthday_this_year.weekday() == 6:
+                        continue
+                    else:
+                        birthdays['Monday'].append(user.name.value)
                 
         result = ""
         for day, names in birthdays.items():
@@ -130,7 +129,6 @@ class AddressBook(UserDict):
                 result += f"{day}: {', '.join(names)}\n"
         result = result.rstrip()
         
-
         if not any(names for names in birthdays.values()):
             return 'No birthdays this week'
 

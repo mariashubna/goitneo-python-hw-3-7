@@ -7,6 +7,7 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
+
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -18,6 +19,7 @@ def input_error(func):
         except IndexError:
             return "Incomplete command."
     return inner
+
 
 @input_error
 def add_contact(args, book):
@@ -41,6 +43,7 @@ def add_contact(args, book):
         book.add_record(contact)
         return "Contact added."
 
+
 @input_error
 def change_contact(args, book: AddressBook):
     username, old_phone, new_phone = args    
@@ -56,6 +59,7 @@ def change_contact(args, book: AddressBook):
     record.edit_phone(old_phone, new_phone)
     return "Contact updated."
 
+
 @input_error          
 def show_phone(args, book: AddressBook):
     username = args[0]
@@ -65,12 +69,14 @@ def show_phone(args, book: AddressBook):
     else:
         raise KeyError(username)
 
+
 @input_error
 def show_all(book):
     if book:
        return '\n'.join([str(record) for record in book.values()])
     else:
        return 'Your contact list is empty.'  
+
 
 @input_error
 def add_birthday( args, book ):
@@ -86,6 +92,7 @@ def add_birthday( args, book ):
     record = book.find(username)
     return record.add_birthday(birthday.strftime("%d.%m.%Y"))
 
+
 @input_error
 def show_birthday(args, book):
     username = args[0]
@@ -98,18 +105,9 @@ def show_birthday(args, book):
         return 'Contact is missing birthday'
 
 
-
-
 @input_error
 def birthdays_next_week(book):
     return book.get_birthdays_per_week()
-
-def delete_contact(args, book):
-    username = args[0]
-    if username not in book.data:
-        raise KeyError(username)
-    record = book.delete(username)
-    return 'Contact deleted'
 
 
 def main():
@@ -138,8 +136,6 @@ def main():
             print(show_birthday(args, contacts))
         elif command == 'birthdays':
             print(contacts.get_birthdays_per_week())
-        elif command == 'delete':
-            print(delete_contact(args, contacts))
         else:
             print("Invalid command.")
 
